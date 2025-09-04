@@ -1,0 +1,48 @@
+// Import express
+const express = require("express");
+const app = express();
+const port = 3000;
+
+// Middleware to parse JSON
+app.use(express.json());
+
+// Sample student data
+let students = [
+  { id: 1, name: "Om", marks: 85 },
+  { id: 2, name: "Aarav", marks: 92 },
+  { id: 3, name: "Riya", marks: 45 }
+];
+
+// GET route → return all students
+app.get("/students", (req, res) => {
+  res.json(students);
+});
+
+// POST route → add new student
+app.post("/students", (req, res) => {
+  const { name, marks } = req.body;
+
+  // Validation
+  if (!name || marks === undefined) {
+    return res.status(400).json({ error: "Name and marks are required!" });
+  }
+
+  const newStudent = {
+    id: students.length + 1,
+    name,
+    marks
+  };
+
+  students.push(newStudent);
+  res.status(201).json({ message: "Student added successfully!", student: newStudent });
+});
+
+// Default route
+app.get("/", (req, res) => {
+  res.send("Welcome to the Student API 🚀");
+});
+
+// Start the server
+app.listen(port, () => {
+  console.log(`✅ Server running at http://localhost:${port}`);
+});
